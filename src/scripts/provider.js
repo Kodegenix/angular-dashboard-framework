@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013, Sebastian Sdorra
+ * Copyright (c) 2015, Sebastian Sdorra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ angular.module('adf.provider', [])
   .provider('dashboard', function(){
 
     var widgets = {};
+    var widgetsPath = '';
     var structures = {};
     var messageTemplate = '<div class="alert alert-danger">{}</div>';
     var loadingTemplate = '\
@@ -64,6 +65,8 @@ angular.module('adf.provider', [])
     *      associated with newly created scope of the widget or the name of a
     *      {@link http://docs.angularjs.org/api/angular.Module#controller registered controller}
     *      if passed as a string.
+    *   - `controllerAs` - `{string=}` - A controller alias name. If present the controller will be
+    *      published to scope under the `controllerAs` name.
     *   - `template` - `{string=|function()=}` - html template as a string.
     *   - `templateUrl` - `{string=}` - path to an html template.
     *   - `reload` - `{boolean=}` - true if the widget could be reloaded. The default is false.
@@ -98,6 +101,29 @@ angular.module('adf.provider', [])
         w.edit = edit;
       }
       widgets[name] = w;
+      return this;
+    };
+
+    /**
+     * @ngdoc method
+     * @name adf.dashboardProvider#widgetsPath
+     * @methodOf adf.dashboardProvider
+     * @description
+     *
+     * Sets the path to the directory which contains the widgets. The widgets
+     * path is used for widgets with a templateUrl which contains the
+     * placeholder {widgetsPath}. The placeholder is replaced with the
+     * configured value, before the template is loaded, but the template is
+     * cached with the unmodified templateUrl (e.g.: {widgetPath}/src/widgets).
+     * The default value of widgetPaths is ''.
+     *
+     *
+     * @param {string} path to the directory which contains the widgets
+     *
+     * @returns {Object} self
+     */
+    this.widgetsPath = function(path){
+      widgetsPath = path;
       return this;
     };
 
@@ -166,16 +192,22 @@ angular.module('adf.provider', [])
     * @name adf.dashboard
     * @description
     *
-    * The dashboard holds all structures and widgets.
+    * The dashboard holds all options, structures and widgets.
     *
     * @returns {Object} self
     */
     this.$get = function(){
+      var cid = 0;
+
       return {
         widgets: widgets,
+        widgetsPath: widgetsPath,
         structures: structures,
         messageTemplate: messageTemplate,
-        loadingTemplate: loadingTemplate
+        loadingTemplate: loadingTemplate,
+        id: function(){
+          return ++cid;
+        }
       };
     };
 

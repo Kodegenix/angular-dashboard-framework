@@ -23,55 +23,38 @@
 */
 
 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-  display: none !important;
-}
+'use strict';
 
-.adf-move {
-  cursor: move;
-  cursor: -webkit-grabbing;
-}
+describe('Drag and drop tests', function(){
 
-.edit .column {
-  min-height: 120px;
-  border: 1px #ccc dashed;
-  padding-top: 15px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
+  beforeEach(function(){
+    browser.get('http://localhost:9003/sample/index.html#/sample/03');
+    browser.executeScript('window.localStorage.clear();');
+  });
 
-pre.edit {
-  margin-top: 15px;
-}
+  it('widgets should be moveable', function(){
+    // enter edit mode
+    element(by.css('h1 a')).click();
 
-.column .placeholder {
-  opacity: 0.4;
-  background: #E8E8E8;
-  border: 1px dashed #505050;
-  margin-bottom: 15px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-}
+    // move first widget to second column
+    var mover = element.all(by.css('a > i.glyphicon-move')).first();
 
-.widget h3 a {
-  text-decoration: none;
-}
+    // check source col
+    var sourceCol = element.all(by.css('.column')).first();
+    expect(sourceCol.all(by.css('.widget')).count()).toEqual(1);
 
-.dashboard-container h1 a {
-  text-decoration: none;
-}
+    // check target col
+    var targetCol = element.all(by.css('.column')).get(1);
+    expect(targetCol.all(by.css('.widget')).count()).toEqual(1);
 
-.padding-bottom {
-  padding-bottom: 5px;
-}
+    // dnd
+    browser.actions()
+      .dragAndDrop(mover, targetCol)
+      .perform();
 
-.adf-flip {
-  -moz-transform: scaleX(-1);
-  -o-transform: scaleX(-1);
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-  filter: FlipH;
-  -ms-filter: "FlipH";
-}
+    // verifiy dnd result
+    expect(sourceCol.all(by.css('.widget')).count()).toBe(0);
+    expect(targetCol.all(by.css('.widget')).count()).toBe(2);
+  });
+
+});

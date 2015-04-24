@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013, Sebastian Sdorra
+ * Copyright (c) 2015, Sebastian Sdorra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,9 +25,17 @@
 'use strict';
 
 angular.module('adf')
-  .directive('adfWidget', function($log, $modal, dashboard) {
+  .directive('adfWidget', function($log, $modal, dashboard, adfTemplatePath) {
 
-    function preLink($scope, $element, $attr){
+    function stringToBoolean(string){
+      switch(angular.isDefined(string) ? string.toLowerCase() : null){
+        case 'true': case 'yes': case '1': return true;
+        case 'false': case 'no': case '0': case null: return false;
+        default: return Boolean(string);
+      }
+    }
+
+    function preLink($scope){
       var definition = $scope.definition;
       if (definition) {
         var w = dashboard.widgets[definition.type];
@@ -37,8 +45,10 @@ angular.module('adf')
             definition.title = w.title;
           }
 
-          // pass edit mode
-          $scope.editMode = $attr.editMode;
+          // set id for sortable
+          if (!definition.wid){
+            definition.wid = dashboard.id();
+          }
 
           // pass copy of widget to scope
           $scope.widget = angular.copy(w);
@@ -56,6 +66,9 @@ angular.module('adf')
           // pass config to scope
           $scope.config = config;
 
+          // convert collapsible to string
+          $scope.collapsible = stringToBoolean($scope.collapsible);
+
           // collapse
           $scope.isCollapsed = false;
         } else {
@@ -66,7 +79,7 @@ angular.module('adf')
       }
     }
 
-    function postLink($scope, $element, $attr) {
+    function postLink($scope, $element) {
       var definition = $scope.definition;
       if (definition) {
         // bind close function
@@ -92,7 +105,7 @@ angular.module('adf')
 
           var opts = {
             scope: editScope,
-            templateUrl: '../src/templates/widget-edit.html'
+            templateUrl: adfTemplatePath + 'widget-edit.html'
           };
 
           var instance = $modal.open(opts);
@@ -116,14 +129,14 @@ angular.module('adf')
       replace: true,
       restrict: 'EA',
       transclude: false,
-      templateUrl: '../src/templates/widget.html',
+      templateUrl: adfTemplatePath + 'widget.html',
       scope: {
         definition: '=',
         col: '=column',
-        editMode: '@',
+        editMode: '=',
         collapsible: '='
       },
-      compile: function compile($element, $attr, transclude) {
+      compile: function compile(){
 
         /**
          * use pre link, because link of widget-content

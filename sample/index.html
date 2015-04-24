@@ -2,7 +2,7 @@
 <!--*
  The MIT License
 
- Copyright (c) 2013, Sebastian Sdorra
+ Copyright (c) 2015, Sebastian Sdorra
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -32,15 +32,13 @@
 
     <title>Dashboard</title>
 
-    <!-- font awesome -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-
     <!-- build:css css/sample.min.css -->
     <!-- Bootstrap core CSS -->
     <link href="components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
     <!-- dashboard style -->
     <link href="../src/styles/main.css" rel="stylesheet">
+    <link href="widgets/clock/src/style.css" rel="stylesheet">
     <!-- endbuild -->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -54,10 +52,19 @@
         document.createElement('adf-dashboard');
         document.createElement('adf-widget');
         document.createElement('adf-widget-content');
+        document.createElement('adf-dashboard-row');
+        document.createElement('adf-dashboard-column');
 
         document.createElement('highchart');
       </script>
     <![endif]-->
+
+    <!-- inlince css -->
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+      }
+    </style>
   </head>
 
   <body ng-app="sample">
@@ -84,6 +91,9 @@
             <li ng-class="navClass('sample/03')">
               <a href="#/sample/03">Sample 03</a>
             </li>
+            <li ng-class="navClass('sample/04')">
+              <a href="#/sample/04">Sample 04</a>
+            </li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -95,17 +105,6 @@
 
     </div>
 
-    <!-- build:js js/jquery.min.js -->
-    <script type="text/javascript" src="components/jquery/jquery.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js js/jquery.ui.sortable.min.js -->
-    <script type="text/javascript" src="components/jquery-ui/ui/jquery.ui.core.js"></script>
-    <script type="text/javascript" src="components/jquery-ui/ui/jquery.ui.widget.js"></script>
-    <script type="text/javascript" src="components/jquery-ui/ui/jquery.ui.mouse.js"></script>
-    <script type="text/javascript" src="components/jquery-ui/ui/jquery.ui.sortable.js"></script>
-    <!-- endbuild -->
-
     <!-- build:js js/angular.min.js -->
     <script type="text/javascript" src="components/angular/angular.js"></script>
     <!-- endbuild -->
@@ -115,6 +114,9 @@
     <!-- endbuild -->
 
     <!-- build:js js/sample.min.js -->
+    <!-- Sortable -->
+    <script type="text/javascript" src="components/Sortable/Sortable.js"></script>
+
     <!-- angular-bootstrap -->
     <script type="text/javascript" src="components/angular-bootstrap/ui-bootstrap.js"></script>
     <script type="text/javascript" src="components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -122,42 +124,61 @@
     <!-- scripts -->
     <script type="text/javascript" src="../src/scripts/adf.js"></script>
     <script type="text/javascript" src="../src/scripts/provider.js"></script>
-    <script type="text/javascript" src="../src/scripts/sortable.js"></script>
     <script type="text/javascript" src="../src/scripts/widget-content.js"></script>
     <script type="text/javascript" src="../src/scripts/widget.js"></script>
     <script type="text/javascript" src="../src/scripts/dashboard.js"></script>
+    <script type="text/javascript" src="../src/scripts/column.js"></script>
+    <script type="text/javascript" src="../src/scripts/row.js"></script>
 
     <!-- local storage -->
-    <script type="text/javascript" src="components/angular-local-storage/angular-local-storage.js"></script>
+    <script type="text/javascript" src="components/angular-local-storage/dist/angular-local-storage.js"></script>
 
     <!-- sample -->
     <script type="text/javascript" src="scripts/sample.js"></script>
     <script type="text/javascript" src="scripts/sample-01.js"></script>
     <script type="text/javascript" src="scripts/sample-02.js"></script>
     <script type="text/javascript" src="scripts/sample-03.js"></script>
-    <script type="text/javascript" src="scripts/structures.js"></script>
+    <script type="text/javascript" src="scripts/sample-04.js"></script>
+
+    <!-- structures -->
+    <script type="text/javascript" src="structures/base/src/base.js"></script>
 
     <!-- news widget -->
-    <script type="text/javascript" src="scripts/widgets/news/news.js"></script>
+    <script type="text/javascript" src="widgets/news/src/news.js"></script>
 
     <!-- weather widget -->
-    <script type="text/javascript" src="scripts/widgets/weather/weather.js"></script>
+    <script type="text/javascript" src="widgets/weather/src/weather.js"></script>
 
     <!-- linklist widget -->
-    <script type="text/javascript" src="scripts/widgets/linklist/linklist.js"></script>
+    <script type="text/javascript" src="widgets/linklist/src/linklist.js"></script>
 
     <!-- markdown widget -->
-    <script type="text/javascript" src="components/showdown/src/showdown.js"></script>
-    <script type="text/javascript" src="components/angular-markdown-directive/markdown.js"></script>
-    <script type="text/javascript" src="scripts/widgets/markdown/markdown.js"></script>
+    <script type="text/javascript" src="widgets/markdown/components/showdown/src/showdown.js"></script>
+    <script type="text/javascript" src="widgets/markdown/components/angular-markdown-directive/markdown.js"></script>
+    <script type="text/javascript" src="widgets/markdown/src/markdown.js"></script>
 
     <!-- randommsg widget -->
-    <script type="text/javascript" src="scripts/widgets/randommsg/randommsg.js"></script>
+    <script type="text/javascript" src="widgets/randommsg/src/randommsg.js"></script>
 
     <!-- github widget -->
-    <script type="text/javascript" src="components/highcharts/highcharts.js"></script>
-    <script type="text/javascript" src="components/highcharts-ng/dist/highcharts-ng.js"></script>
-    <script type="text/javascript" src="scripts/widgets/github/github.js"></script>
+    <script type="text/javascript" src="widgets/github/components/highcharts/adapters/standalone-framework.src.js"></script>
+    <script type="text/javascript" src="widgets/github/components/highcharts/highcharts.js"></script>
+    <script type="text/javascript" src="widgets/github/components/highcharts-ng/dist/highcharts-ng.js"></script>
+    <script type="text/javascript" src="widgets/github/src/github.js"></script>
+    <script type="text/javascript" src="widgets/github/src/service.js"></script>
+    <script type="text/javascript" src="widgets/github/src/authorController.js"></script>
+    <script type="text/javascript" src="widgets/github/src/historyController.js"></script>
+
+    <!-- version widget -->
+    <script type="text/javascript" src="widgets/version/src/version.js"></script>
+
+    <!-- clock widget -->
+    <script type="text/javascript" src="widgets/clock/components/moment/moment.js"></script>
+    <script type="text/javascript" src="widgets/clock/src/clock.js"></script>
+
+    <!-- inject:js -->
+    <!-- endinject -->
+
     <!-- endbuild -->
   </body>
 </html>

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2013, Sebastian Sdorra
+ * Copyright (c) 2015, Sebastian Sdorra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,16 @@
 'use strict';
 
 angular.module('sample', [
-  'adf', 'sample.widgets.news', 'sample.widgets.randommsg',
-  'sample.widgets.weather', 'sample.widgets.markdown',
-  'sample.widgets.linklist', 'sample.widgets.github',
-  'LocalStorageModule', 'structures', 'sample-01',
-  'sample-02', 'sample-03', 'ngRoute'
+  'adf', 'adf.structures.base', 'adf.widget.news',
+  'adf.widget.randommsg', 'adf.widget.weather',
+  'adf.widget.markdown', 'adf.widget.linklist',
+  'adf.widget.github', 'adf.widget.version',
+  'adf.widget.clock', 'LocalStorageModule',
+  'sample-01', 'sample-02', 'sample-03',
+  'sample-04', 'ngRoute'
 ])
-.config(function($routeProvider, localStorageServiceProvider){
+.config(function(dashboardProvider, $routeProvider, localStorageServiceProvider){
+  dashboardProvider.widgetsPath('widgets/');
   localStorageServiceProvider.setPrefix('adf');
 
   $routeProvider.when('/sample/01', {
@@ -44,6 +47,10 @@ angular.module('sample', [
   .when('/sample/03', {
     templateUrl: 'partials/sampleWithFilter.html',
     controller: 'sample03Ctrl'
+  })
+  .when('/sample/04', {
+    templateUrl: 'partials/sample.html',
+    controller: 'sample04Ctrl'
   })
   .otherwise({
     redirectTo: '/sample/01'

@@ -1,7 +1,7 @@
 /**
  * The MIT License
  *
- * Copyright (c) 2014, Sebastian Sdorra
+ * Copyright (c) 2015, Sebastian Sdorra
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,7 @@ angular.module('sample-03', ['adf', 'LocalStorageModule'])
 
   // only allow github widgets
   $scope.widgetFilter = function(widget, type){
-    return type.indexOf('github') >= 0 || type === 'markdown';
+    return type.indexOf('github') >= 0 || type === 'markdown' || type === 'version';
   };
 
   $scope.$on('adfDashboardChanged', function(event, name, model) {

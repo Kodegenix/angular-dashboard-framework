@@ -244,8 +244,7 @@ angular.module('adf')
 
         $scope.cancelEditMode = function(){
           $scope.editMode = false;
-		  angular.copy($scope.modelCopy, $scope.adfModel);
-		  angular.copy($scope.modelCopy, $scope.model);
+		      $scope.modelCopy = angular.copy($scope.modelCopy, $scope.adfModel);
         };
 
         // edit dashboard settings
@@ -260,7 +259,7 @@ angular.module('adf')
           var instance = $modal.open({
             scope: editDashboardScope,
             templateUrl: adfTemplatePath + 'dashboard-edit.html',
-			backdrop: 'static'
+            backdrop: 'static'
           });
           $scope.changeStructure = function(name, structure){
             $log.info('change structure to ' + name);
@@ -278,11 +277,12 @@ angular.module('adf')
         // add widget dialog
         $scope.addWidgetDialog = function(){
           var addScope = $scope.$new();
+          var model = $scope.model;
           var widgets;
           if (angular.isFunction(widgetFilter)){
             widgets = {};
             angular.forEach(dashboard.widgets, function(widget, type){
-              if (widgetFilter(widget, type)){
+              if (widgetFilter(widget, type, model)){
                 widgets[type] = widget;
               }
             });
@@ -293,7 +293,7 @@ angular.module('adf')
           var opts = {
             scope: addScope,
             templateUrl: adfTemplatePath + 'widget-add.html',
-			backdrop: 'static'
+			      backdrop: 'static'
           };
           var instance = $modal.open(opts);
           addScope.addWidget = function(widget){
@@ -301,7 +301,7 @@ angular.module('adf')
               type: widget,
               config: createConfiguration(widget)
             };
-            addNewWidgetToModel(addScope.model, w);
+            addNewWidgetToModel(model, w);
             // close and destroy
             instance.close();
             addScope.$destroy();
